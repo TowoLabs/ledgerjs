@@ -105,24 +105,23 @@ export default class Xrp {
     let offset = 0;
 
     while (offset !== rawTx.length) {
-      const maxChunkSize = offset === 0 ? 150 - 1 - bipPath.length * 4 : 150;
-      const chunkSize =
-        offset + maxChunkSize > rawTx.length
-          ? rawTx.length - offset
-          : maxChunkSize;
+      const isFirst = offset === 0;
+      const maxChunkSize = isFirst ? 150 - 1 - bipPath.length * 4 : 150;
+
+      const hasMore = offset + maxChunkSize < rawTx.length;
+      const chunkSize = hasMore ? maxChunkSize : rawTx.length - offset;
 
       const apdu = {
         cla: 0xe0,
         ins: 0x04,
-        p1: offset === 0 ? 0x00 : 0x80,
+        p1: (isFirst ? 0x00 : 0x01) | (hasMore ? 0x80 : 0x00),
         p2: curveMask,
-        data:
-          offset === 0
-            ? Buffer.alloc(1 + bipPath.length * 4 + chunkSize)
-            : Buffer.alloc(chunkSize)
+        data: isFirst
+          ? Buffer.alloc(1 + bipPath.length * 4 + chunkSize)
+          : Buffer.alloc(chunkSize)
       };
 
-      if (offset === 0) {
+      if (isFirst) {
         apdu.data.writeInt8(bipPath.length, 0);
         bipPath.forEach((segment, index) => {
           apdu.data.writeUInt32BE(segment, 1 + index * 4);
