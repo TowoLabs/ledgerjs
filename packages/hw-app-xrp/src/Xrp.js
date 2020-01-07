@@ -4,11 +4,50 @@ import type Transport from "@ledgerhq/hw-transport";
 import BIPPath from "bip32-path";
 
 /**
- * Ripple API
+ * XRP API
  *
  * @example
+ * import Transport from "@ledgerhq/hw-transport-node-hid";
+ * // import Transport from "@ledgerhq/hw-transport-u2f"; // for browser
  * import Xrp from "@ledgerhq/hw-app-xrp";
- * const xrp = new Xrp(transport);
+ * import { encode } from 'ripple-binary-codec';
+ *
+ * function establishConnection() {
+ *     return Transport.create()
+ *         .then(transport => new Xrp(transport));
+ * }
+ *
+ * function fetchAddress(xrp) {
+ *     return xrp.getAddress("44'/144'/0'/0/0");
+ * }
+ *
+ * function signTransaction(xrp, deviceData, seqNo) {
+ *     let transactionJSON = {
+ *         TransactionType: "Payment",
+ *         Account: deviceData.address,
+ *         Destination: "rTooLkitCksh5mQa67eaa2JaWHDBnHkpy",
+ *         Amount: "1000000",
+ *         Fee: "15",
+ *         Flags: 2147483648,
+ *         Sequence: seqNo,
+ *         SigningPubKey: deviceData.publicKey.toUpperCase()
+ *     };
+ *
+ *     const transactionBlob = encode(transactionJSON);
+ *
+ *     console.log('Sending transaction to device for approval...');
+ *     return xrp.signTransaction("44'/144'/0'/0/0", transactionBlob);
+ * }
+ *
+ * function prepareAndSign(xrp, seqNo) {
+ *     return fetchAddress(xrp)
+ *         .then(deviceData => signTransaction(xrp, deviceData, seqNo));
+ * }
+ *
+ * establishConnection()
+ *     .then(xrp => prepareAndSign(xrp, 123))
+ *     .then(signature => console.log(`Signature: ${signature}`))
+ *     .catch(e => console.log(`An error occurred (${e.message})`));
  */
 export default class Xrp {
   transport: Transport<*>;
@@ -23,7 +62,7 @@ export default class Xrp {
   }
 
   /**
-   * get Ripple address for a given BIP 32 path.
+   * get XRP address for a given BIP 32 path.
    *
    * @param path a path in BIP 32 format
    * @param display optionally enable or not the display
@@ -83,10 +122,15 @@ export default class Xrp {
   }
 
   /**
-   * sign a Ripple transaction with a given BIP 32 path
+   * sign a XRP transaction with a given BIP 32 path
+   *
+   * The rawTxHex parameter is the serialized transaction blob represented as
+   * hex.
    *
    * @param path a path in BIP 32 format
-   * @param rawTxHex a raw transaction hex string
+   * @param rawTxHex a raw hex string representing a serialized transaction blob.
+   *        This parameter can be encoded using [ripple-binary-codec](https://www.npmjs.com/package/ripple-binary-codec).
+   *        See https://xrpl.org/serialization.html for more documentation on the serialization format.
    * @param ed25519 optionally enable or not the ed25519 curve (secp256k1 is default)
    * @return a signature as hex string
    * @example
@@ -156,7 +200,7 @@ export default class Xrp {
   }
 
   /**
-   * get the version of the Ripple app installed on the hardware device
+   * get the version of the XRP app installed on the hardware device
    *
    * @return an object with a version
    * @example
