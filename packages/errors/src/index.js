@@ -268,7 +268,7 @@ export function getAltStatusMessage(code: number): ?string {
     case 0x6700:
       return "Incorrect length";
     case 0x6800:
-      return "Missing critical information";
+      return "Missing critical parameter";
     case 0x6982:
       return "Security not satisfied (dongle locked or have invalid access rights)";
     case 0x6985:
