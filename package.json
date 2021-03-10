@@ -60,7 +60,7 @@
     "flow-mono-cli": "^1.5.3",
     "flow-typed": "^2.6.1",
     "jest": "^25.1.0",
-    "lerna": "3.20.2",
+    "lerna": "4.0.0",
     "prettier": "^1.18.2",
     "uglify-js": "^3.8.0"
   },
