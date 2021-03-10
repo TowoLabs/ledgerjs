@@ -30,7 +30,7 @@
     "@ledgerhq/errors": "^5.11.0",
     "@ledgerhq/hw-transport": "^5.11.0",
     "@ledgerhq/logs": "^5.11.0",
-    "u2f-api": "0.2.7"
+    "u2f-api": "1.2.1"
   },
   "devDependencies": {
     "flow-bin": "^0.120.1"
