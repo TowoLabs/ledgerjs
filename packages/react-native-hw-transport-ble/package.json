@@ -33,7 +33,7 @@
     "@ledgerhq/logs": "^5.11.0",
     "invariant": "^2.2.4",
     "rxjs": "^6.5.4",
-    "uuid": "^3.4.0"
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "flow-bin": "^0.120.1"
