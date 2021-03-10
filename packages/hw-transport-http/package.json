@@ -30,7 +30,7 @@
     "@ledgerhq/hw-transport": "^5.11.0",
     "@ledgerhq/logs": "^5.11.0",
     "axios": "^0.19.0",
-    "ws": "6"
+    "ws": "7"
   },
   "devDependencies": {
     "flow-bin": "^0.120.1"
